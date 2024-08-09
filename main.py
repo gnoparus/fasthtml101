@@ -5,7 +5,12 @@ app, rt = fast_app()
 
 @rt("/")
 def get():
-    return Div(P("Hello World!"))
+    return Div(P("Hello World!"), hx_get="/change")
+
+
+@rt("/change")
+def get():
+    return Div(P("Another page!"))
 
 
 serve()
