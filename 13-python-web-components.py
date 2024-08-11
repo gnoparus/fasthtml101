@@ -23,7 +23,7 @@ def get():
     return Titled(
         "Hello App3",
         Div(P("Hello World! 222")),
-        P(A("hx Link", hx_get="/", hx_swap="outerHTML")),
+        P(A("hx Link", hx_get="/"),
         P(A("Href Link", href="/")),
     )
 
