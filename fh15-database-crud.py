@@ -17,11 +17,25 @@ app, rt, todos, Todo = fast_app(
 )
 
 
+def home():
+    frm = Form(
+        Group(Input(placeholder="What needs to be done?", name="title"), Button("Add")),
+        hx_post="/todos/",
+        target_id="todos-list",
+        hx_swap="beforeend",
+    )
+
+    return Titled("Todos", Card(Ul(*todos(), id="todos-list"), header=frm))
+
+
 @rt("/")
 def get():
-    items = todos()
+    return home()
 
-    return Titled("Database CRUD demo app", Div(Ul(*items)))
+
+@rt("/todos")
+def post(todo: Todo):
+    return todos.insert(todo)
 
 
 @rt("/todos/{tid}")
