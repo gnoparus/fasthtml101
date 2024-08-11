@@ -3,7 +3,7 @@ from fasthtml.common import *
 
 def render(todo):
     tid = f"todo-{todo.id}"
-    toggle = A("Toggle", hx_get=f"/toggle/{todo.id}", target_id=tid)
+    toggle = A("Toggle", hx_put=f"/toggle/{todo.id}", target_id=tid)
     return Li(toggle, todo.title + (" 🗹" if todo.done else ""), id=tid)
 
 
@@ -20,7 +20,7 @@ def get():
 
 
 @rt("/toggle/{tid}")
-def get(tid: int):
+def put(tid: int):
     todo = todos[tid]
     todo.done = not todo.done
     todos.update(todo)
