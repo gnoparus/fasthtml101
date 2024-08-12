@@ -4,12 +4,17 @@ from fasthtml.common import *
 def render(todo):
     tid = f"todo-{todo.id}"
     toggle = A(
-        " Toggle", hx_put=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+        "Toggle", hx_put=f"/todos/{todo.id}/toggle", target_id=tid, hx_swap="outerHTML"
+    )
+    edit = A(
+        "Edit",
+        hx_get=f"/todos/{todo.id}/edit",
+        target_id=tid,
     )
     delete = A(
-        " Delete", hx_delete=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+        "Delete", hx_delete=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
     )
-    return Li(toggle, delete, todo.title + (" 🗹" if todo.done else ""), id=tid)
+    return Li(toggle, edit, delete, todo.title + (" 🗹" if todo.done else ""), id=tid)
 
 
 app, rt, todos, Todo = fast_app(
@@ -19,6 +24,22 @@ app, rt, todos, Todo = fast_app(
 
 def create_todo_form():
     return Input(placeholder="What needs to be done?", id="title", hx_swap_oob="true")
+
+
+def edit_todo_form(todo):
+    tid = f"todo-{todo.id}"
+    return Form(
+        Group(
+            Input(value=todo.title, id="title"),
+            Checkbox(checked=todo.done, id="done"),
+            Button(
+                "Save", hx_put=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+            ),
+            Button(
+                "Cancel", hx_get=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+            ),
+        ),
+    )
 
 
 def home():
@@ -40,15 +61,34 @@ def get():
     return home()
 
 
+@rt("/todos/{tid}")
+def get(tid: int):
+    return todos[tid]
+
+
+@rt("/todos/{tid}/edit")
+def get(tid: int):
+    return edit_todo_form(todos[tid])
+
+
 @rt("/todos")
 def post(todo: Todo):
-    return todos.insert(todo), create_todo_from()
+    return todos.insert(todo), create_todo_form()
 
 
-@rt("/todos/{tid}")
+@rt("/todos/{tid}/toggle")
 def put(tid: int):
     todo = todos[tid]
     todo.done = not todo.done
+    todos.update(todo)
+    return todo
+
+
+@rt("/todos/{tid}")
+def put(tid: int, newtodo: Todo):
+    todo = todos[tid]
+    todo.title = newtodo.title
+    todo.done = newtodo.done
     todos.update(todo)
     return todo
 
