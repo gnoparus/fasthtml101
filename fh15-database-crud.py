@@ -17,10 +17,17 @@ app, rt, todos, Todo = fast_app(
 )
 
 
+def create_todo_from():
+    return Input(placeholder="What needs to be done?", id="title", hx_swap_oob="true")
+
+
 def home():
     frm = Form(
-        Group(Input(placeholder="What needs to be done?", name="title"), Button("Add")),
-        hx_post="/todos/",
+        Group(
+            create_todo_from(),
+            Button("Add"),
+        ),
+        hx_post="/todos",
         target_id="todos-list",
         hx_swap="beforeend",
     )
@@ -35,7 +42,7 @@ def get():
 
 @rt("/todos")
 def post(todo: Todo):
-    return todos.insert(todo)
+    return todos.insert(todo), create_todo_from()
 
 
 @rt("/todos/{tid}")
