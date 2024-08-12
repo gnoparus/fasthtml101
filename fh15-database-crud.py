@@ -29,14 +29,22 @@ def create_todo_form():
 def edit_todo_form(todo):
     tid = f"todo-{todo.id}"
     return Form(
-        Group(
+        Fieldset(
             Input(value=todo.title, id="title"),
-            Checkbox(checked=todo.done, id="done"),
+            Checkbox(label="Done", checked=todo.done, id="done"),
             Button(
-                "Save", hx_put=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+                "Save",
+                hx_put=f"/todos/{todo.id}",
+                target_id=tid,
+                hx_swap="outerHTML",
+                cls="primary",
             ),
             Button(
-                "Cancel", hx_get=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
+                "Cancel",
+                hx_get=f"/todos/{todo.id}",
+                target_id=tid,
+                hx_swap="outerHTML",
+                cls="secondary",
             ),
         ),
     )
