@@ -18,7 +18,7 @@ def render(todo):
 
 
 app, rt, todos, Todo = fast_app(
-    "todos.db", live=True, render=render, id=int, pk="id", title=str, done=bool
+    "./data/todos.db", live=False, render=render, id=int, pk="id", title=str, done=bool
 )
 
 
@@ -61,7 +61,7 @@ def home():
         hx_swap="beforeend",
     )
 
-    return Titled("Todos", Card(Ul(*todos(), id="todos-list"), header=frm))
+    return Titled("Keng's Todo List", Card(Ul(*todos(), id="todos-list"), header=frm))
 
 
 @rt("/")
