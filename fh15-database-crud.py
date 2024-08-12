@@ -17,14 +17,14 @@ app, rt, todos, Todo = fast_app(
 )
 
 
-def create_todo_from():
+def create_todo_form():
     return Input(placeholder="What needs to be done?", id="title", hx_swap_oob="true")
 
 
 def home():
     frm = Form(
         Group(
-            create_todo_from(),
+            create_todo_form(),
             Button("Add"),
         ),
         hx_post="/todos",
