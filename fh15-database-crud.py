@@ -4,12 +4,15 @@ from fasthtml.common import *
 def render(todo):
     tid = f"todo-{todo.id}"
     toggle = A(
-        "Toggle", hx_put=f"/todos/{todo.id}/toggle", target_id=tid, hx_swap="outerHTML"
+        "Toggle",
+        hx_put=f"/todos/{todo.id}/toggle",
+        hx_target=f"#{tid}",
+        hx_swap="outerHTML",
     )
     edit = A(
         "Edit",
         hx_get=f"/todos/{todo.id}/edit",
-        target_id=tid,
+        hx_target=f"#{tid}",
     )
     delete = A(
         "Delete", hx_delete=f"/todos/{todo.id}", target_id=tid, hx_swap="outerHTML"
@@ -35,14 +38,14 @@ def edit_todo_form(todo):
             Button(
                 "Save",
                 hx_put=f"/todos/{todo.id}",
-                target_id=tid,
+                hx_target=f"#{tid}",
                 hx_swap="outerHTML",
                 cls="primary",
             ),
             Button(
                 "Cancel",
                 hx_get=f"/todos/{todo.id}",
-                target_id=tid,
+                hx_target=f"#{tid}",
                 hx_swap="outerHTML",
                 cls="secondary",
             ),
