@@ -11,18 +11,24 @@ def mk_button(show):
         hx_get="/toggle?show=" + ("False" if show else "True"),
         hx_target="#content",
         id="toggle",
-        hx_swap_oob="outerHTML",
+        ### Try uncomment and view source in the browser,
+        ### the button will be cut and paste from response
+        ### to replace the button with the same id on page.
+        ### Not creating a new button node.
+        # hx_swap_oob="outerHTML",
     )
 
 
 @app.get("/")
 def homepage():
-    return Div(mk_button(False), Div(id="content"))
+    return Div(mk_button(False), Div(id="content"), id="hp1")
 
 
 @rt("/toggle")
 def get(show: bool):
-    return Div(mk_button(show)), Div(content if show else "")
+    return Div(
+        Div(mk_button(show)), Div(content if show else "", id="content2"), id="tg"
+    )
 
 
 serve()
