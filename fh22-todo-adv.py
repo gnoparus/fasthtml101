@@ -350,10 +350,11 @@ async def get(id: int):
         target_id=f"todo-{todo.id}",
         hx_swap="outerHTML",
     )
+    btn2 = Button("edit", hx_get=f"/edit/{todo.id}", target_id=f"current-todo")
     # The "markdown" class is used here because that's the CSS selector we used in the JS earlier.
     # Therefore this will trigger the JS to parse the markdown in the details field.
     # Because `class` is a reserved keyword in Python, we use `cls` instead, which FastHTML auto-converts.
-    return Div(H2(todo.title), Div(todo.details, cls="markdown"), btn)
+    return Div(H2(todo.title), Div(todo.details, cls="markdown"), btn, btn2)
 
 
 serve()
