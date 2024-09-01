@@ -27,8 +27,23 @@ def ChatMessage(msg, user):
     bubble_class = "chat-bubble-primary" if user else "chat-bubble-secondary"
     chat_class = "chat-end" if user else "chat-start"
     return Div(cls=f"chat {chat_class}")(
-        Div("user" if user else "assistant", cls="chat-header"),
+        Div(
+            Div(
+                Img(
+                    alt="Tailwind CSS chat bubble component",
+                    src="https://impactmindai435-res.cloudinary.com/image/upload/v1723612512/bualabs/IMG_7477_%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%99%E0%B8%B2_%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%99%E0%B8%B2_Original_sk9in8.jpg",
+                ),
+                cls="w-10 rounded-full",
+            ),
+            cls="chat-image avatar",
+        ),
+        Div(
+            "user" if user else "assistant",
+            Time("2 hours ago", cls="text-xs opacity-50"),
+            cls="chat-header",
+        ),
         Div(msg, cls=f"chat-bubble {bubble_class}"),
+        Div("Seen" if user else "Delivered", cls="chat-footer opacity-50"),
         Hidden(msg, name="messages"),
     )
 
