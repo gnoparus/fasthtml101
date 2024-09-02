@@ -75,11 +75,10 @@ def index():
 # Handle the form submission
 @app.post("/")
 def send(msg: str, messages: list[str] = []):
-    # if not messages:
-    #     messages = []
+    if msg == "":
+        return ""
 
     messages = [str(obj) for obj in messages]
-
     messages.append(msg.rstrip())
     r = contents(cli(messages, sp=sp))  # get response from chat model
     return (
