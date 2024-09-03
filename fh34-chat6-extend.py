@@ -6,12 +6,87 @@ import asyncio
 # Load environment variables from the .env file (if present)
 load_dotenv()
 
+
+from hmac import compare_digest
+
+db = database("data/fhchat6.db")
+
+users, msgs = db.t.users, db.t.msgs
+
+
+if msgs not in db.t:
+    # You can pass a dict, or kwargs, to most MiniDataAPI methods.
+    users.create(dict(name=str, pwd=str), pk="name")
+    msgs.create(id=int, chatid=int, role=str, content=str, pk="id")
+
+User, Msgs = users.dataclass(), msgs.dataclass()
+
+login_redir = RedirectResponse("/login", status_code=303)
+
+
+def before(req, sess):
+    auth = req.scope["auth"] = sess.get("auth", None)
+
+    if not auth:
+        return login_redir
+
+    print("msgs: ", type(msgs))
+    msgs.xtra(name=auth)
+
+
+def _not_found(req, exc):
+    return Titled("Oh no!", Div("We could not find that page :("))
+
+
+bware = Beforeware(before, skip=[r"/favicon\.ico", r"/static/.*", r".*\.css", "/login"])
+
 tlink = (Script(src="https://cdn.tailwindcss.com"),)
 dlink = Link(
     rel="stylesheet",
     href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css",
 )
-app = FastHTML(hdrs=(tlink, dlink, picolink), ws_hdr=True)
+app = FastHTML(
+    before=bware,
+    exception_handlers={404: _not_found},
+    hdrs=(tlink, dlink, picolink),
+    ws_hdr=True,
+)
+
+rt = app.route
+
+
+@rt("/login")
+def get():
+    frm = Form(
+        Input(id="name", placeholder="Name"),
+        Input(id="pwd", type="password", placeholder="Password"),
+        Button("login"),
+        action="/login",
+        method="post",
+    )
+    return Titled("Login", frm)
+
+
+@dataclass
+class Login:
+    name: str
+    pwd: str
+
+
+@rt("/login")
+def post(login: Login, sess):
+    print("login: ", login)
+    if not login.name or not login.pwd:
+        return login_redir
+    try:
+        u = users[login.name]
+    except NotFoundError:
+        u = users.insert(login)
+    if not compare_digest(u.pwd.encode("utf-8"), login.pwd.encode("utf-8")):
+        return login_redir
+    sess["auth"] = u.name
+    return RedirectResponse("/", status_code=303)
+
 
 cli = AsyncClient(models[-1])
 sp = "You are a helpful and concise assistant."
