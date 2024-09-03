@@ -25,11 +25,31 @@ def ChatMessage(msg_idx, **kwargs):
     )
     chat_class = "chat-end" if msg["role"] == "user" else "chat-start"
     return Div(
-        Div(msg["role"], cls="chat-header"),
         Div(
-            msg["content"],
-            cls=f"chat-bubble {bubble_class}",
-            id=f"chat-content-{msg_idx}",
+            Div(
+                Img(
+                    alt="Tailwind CSS chat bubble component",
+                    src="https://impactmindai435-res.cloudinary.com/image/upload/v1723612512/bualabs/IMG_7477_%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%99%E0%B8%B2_%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%99%E0%B8%B2_Original_sk9in8.jpg",
+                ),
+                cls="w-10 rounded-full",
+            ),
+            cls="chat-image avatar",
+        ),
+        Div(
+            Div(
+                msg["role"],
+                Time("2 hours ago", cls="text-xs opacity-50"),
+                cls="chat-header",
+            ),
+            Div(
+                msg["content"],
+                cls=f"chat-bubble {bubble_class}",
+                id=f"chat-content-{msg_idx}",
+            ),
+            Div(
+                "Seen" if msg_idx % 2 == 1 else "Delivered",
+                cls="chat-footer opacity-50",
+            ),
         ),
         id=f"chat-message-{msg_idx}",
         cls=f"chat {chat_class}",
