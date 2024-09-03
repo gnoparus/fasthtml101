@@ -52,7 +52,7 @@ def ChatMessage(msg_idx: int):
             ),
             Div(text, cls=f"chat-bubble {bubble_class}"),
             Div(
-                "Seen" if msg_idx // 2 == 0 else "Delivered",
+                "Seen" if msg_idx % 2 == 0 else "Delivered",
                 cls="chat-footer opacity-50",
             ),
         ),
