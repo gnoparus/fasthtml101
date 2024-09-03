@@ -79,11 +79,7 @@ def home():
             ws_connect="/wsnewchat",
             cls="flex space-x-2 mt-2",
         ),
-        Div(
-            *[ChatMessage(msg_idx) for msg_idx, msg in enumerate(messages)],
-            id="chatlist",
-            cls="chat-box h-[73vh] overflow-y-auto",
-        ),
+        ChatList(messages),
         Form(
             Group(ChatInput(), Button("Send", cls="btn btn-primary")),
             ws_send=True,
@@ -98,19 +94,22 @@ def home():
     return Title("Chatbot Demo"), page
 
 
+def ChatList(msgs=[]):
+    return Div(
+        *[ChatMessage(msg_idx) for msg_idx, msg in enumerate(msgs)],
+        id="chatlist",
+        cls="chat-box h-[73vh] overflow-y-auto",
+        hx_swap_oob="outerHTML",
+    )
+
+
 @app.ws("/wsnewchat")
 async def newchat(send):
     # print("newchat")
 
     messages.clear()
 
-    await send(
-        Div(
-            id="chatlist",
-            cls="chat-box h-[73vh] overflow-y-auto",
-            hx_swap_oob="outerHTML",
-        )
-    )
+    await send(ChatList())
 
     await send(ChatInput())
 
