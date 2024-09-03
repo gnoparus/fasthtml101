@@ -85,6 +85,8 @@ def home():
             cls="flex space-x-2 mt-2",
         ),
         cls="p-4 max-w-lg mx-auto",
+        # data_theme="dark",
+        data_theme="cupcake",
     )
     return Title("Chatbot Demo"), page
 
