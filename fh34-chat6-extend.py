@@ -60,11 +60,13 @@ def get():
     frm = Form(
         Input(id="name", placeholder="Name"),
         Input(id="pwd", type="password", placeholder="Password"),
-        Button("login"),
+        Button("Login", cls="btn btn-primary"),
         action="/login",
         method="post",
     )
-    return Titled("Login", frm)
+    page = Body(H2("Login", cls="text-lg font-bold"), frm)
+
+    return Title("Login"), Main(page)
 
 
 @dataclass
@@ -144,9 +146,9 @@ def ChatInput():
 
 
 @app.get("/")
-def home():
+def home(session):
     page = Body(
-        H1("Chatbot Demo"),
+        H1("Chatbot Demo", session),
         Form(
             Group(Button("New Chat", cls="btn btn-primary")),
             ws_send=True,
