@@ -63,7 +63,7 @@ def ChatInput():
 # The main screen
 @app.get("/")
 def index():
-    page = Form(hx_post="/", hx_target="#chatlist", hx_swap="beforeend")(
+    page = Form(hx_post=send, hx_target="#chatlist", hx_swap="beforeend")(
         Div(id="chatlist", cls="chat-box h-[73vh] overflow-y-auto"),
         Div(cls="flex space-x-2 mt-2")(
             Group(ChatInput(), Button("Send", cls="btn btn-primary"))
@@ -78,7 +78,6 @@ def send(msg: str, messages: list[str] = []):
     if msg == "":
         return ""
 
-    messages = [str(obj) for obj in messages]
     messages.append(msg.rstrip())
     r = contents(cli(messages, sp=sp))  # get response from chat model
     return (
