@@ -93,7 +93,6 @@ def index():
 async def stream_response(msg, messages):
     yield to_xml(ChatMessage(msg, True, id=len(messages) - 1))
     yield to_xml(ChatMessage("", False, id=len(messages)))
-    messages = [str(obj) for obj in messages]
     r = cli(messages, sp=sp, stream=True)
     response_txt = ""
     for chunk in r:
